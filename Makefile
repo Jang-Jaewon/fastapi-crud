@@ -9,3 +9,9 @@ start:
 
 beauty:
 	black . && isort .
+
+db-migrate:
+	docker-compose exec app alembic revision --autogenerate -m "${MSG}"
+
+db-upgrade:
+	docker-compose exec app alembic upgrade head
