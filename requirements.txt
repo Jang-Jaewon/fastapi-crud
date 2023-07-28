@@ -1,4 +1,5 @@
 alembic==1.6.5
+aniso8601==7.0.0
 appdirs==1.4.4
 asgiref==3.3.4
 black==21.6b0
@@ -9,6 +10,10 @@ distlib==0.3.2
 fastapi==0.65.2
 FastAPI-SQLAlchemy==0.2.1
 filelock==3.0.12
+graphene==2.1.9
+graphene-sqlalchemy==2.3.0
+graphql-core==2.3.2
+graphql-relay==2.0.1
 greenlet==1.1.0
 h11==0.12.0
 isort==5.12.0
@@ -17,12 +22,15 @@ MarkupSafe==2.0.1
 mypy-extensions==0.4.3
 pathspec==0.8.1
 pipenv==2021.5.29
+promise==2.3
 psycopg2==2.9.1
 pydantic==1.8.2
 python-dateutil==2.8.1
 python-dotenv==0.18.0
 python-editor==1.0.4
 regex==2021.4.4
+Rx==1.6.3
+singledispatch==3.7.0
 six==1.16.0
 SQLAlchemy==1.4.19
 starlette==0.14.2
