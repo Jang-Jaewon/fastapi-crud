@@ -26,6 +26,7 @@ pipenv==2021.5.29
 promise==2.3
 psycopg2==2.9.1
 pydantic==1.8.2
+PyJWT==2.8.0
 python-dateutil==2.8.1
 python-dotenv==0.18.0
 python-editor==1.0.4

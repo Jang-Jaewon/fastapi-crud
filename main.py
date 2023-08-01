@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import bcrypt
 import graphene
 from fastapi import FastAPI
@@ -5,6 +7,7 @@ from starlette.graphql import GraphQLApp
 
 import models
 from db_conf import db_session
+from jwt_token import create_access_token
 from schemas import PostModel, PostSchema, UserSchema
 
 db = db_session.session_factory()
@@ -23,6 +26,37 @@ class Query(graphene.ObjectType):
 
     def resolve_post_by_id(self, info, post_id):
         return db.query(models.Post).filter(models.Post.id == post_id).first()
+
+
+class AuthenticateUser(graphene.Mutation):
+    class Arguments:
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    ok = graphene.Boolean()
+    token = graphene.String()
+
+    @staticmethod
+    def mutate(root, info, username, password):
+        user = UserSchema(username=username, password=password)
+
+        db_user_info = (
+            db.query(models.User).filter(models.User.username == username).first()
+        )
+
+        if bcrypt.checkpw(
+            user.password.encode("utf-8"), db_user_info.password.encode("utf-8")
+        ):
+            access_token_expires = timedelta(minutes=60)
+            access_token = create_access_token(
+                data={"user": username}, expires_delta=access_token_expires
+            )
+            ok = True
+            return AuthenticateUser(ok=ok, token=access_token)
+
+        else:
+            ok = False
+            return AuthenticateUser(ok=ok)
 
 
 class CreateNewUser(graphene.Mutation):
@@ -73,6 +107,7 @@ class CreateNewPost(graphene.Mutation):
 
 
 class PostMutations(graphene.ObjectType):
+    authenticate_user = AuthenticateUser.Field()
     create_new_post = CreateNewPost.Field()
     create_new_user = CreateNewUser.Field()
 
