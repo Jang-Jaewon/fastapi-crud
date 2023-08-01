@@ -4,11 +4,20 @@ from starlette.graphql import GraphQLApp
 
 import models
 from db_conf import db_session
-from schemas import PostSchema
+from schemas import PostSchema, PostModel
 
 db = db_session.session_factory()
 
 app = FastAPI()
+
+
+class Query(graphene.ObjectType):
+
+    all_posts = graphene.List(PostModel)
+
+    def resolve_all_posts(self, info):
+        query = PostModel.get_query(info)
+        return query.all()
 
 
 class CreateNewPost(graphene.Mutation):
@@ -33,4 +42,4 @@ class PostMutations(graphene.ObjectType):
     create_new_post = CreateNewPost.Field()
 
 
-app.add_route("/graphql", GraphQLApp(schema=graphene.Schema(mutation=PostMutations)))
+app.add_route("/graphql", GraphQLApp(schema=graphene.Schema(query=Query, mutation=PostMutations)))
