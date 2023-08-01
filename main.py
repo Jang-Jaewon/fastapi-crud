@@ -14,10 +14,14 @@ app = FastAPI()
 class Query(graphene.ObjectType):
 
     all_posts = graphene.List(PostModel)
+    post_by_id = graphene.Field(PostModel, post_id=graphene.Int(required=True))
 
     def resolve_all_posts(self, info):
         query = PostModel.get_query(info)
         return query.all()
+
+    def resolve_post_by_id(self, info, post_id):
+        return db.query(models.Post).filter(models.Post.id == post_id).first()
 
 
 class CreateNewPost(graphene.Mutation):
