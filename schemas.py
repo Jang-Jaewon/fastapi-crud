@@ -12,3 +12,8 @@ class PostSchema(BaseModel):
 class PostModel(SQLAlchemyObjectType):
     class Meta:
         model = Post
+
+
+class UserSchema(BaseModel):
+    username: str
+    password: str

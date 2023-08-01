@@ -2,6 +2,7 @@ alembic==1.6.5
 aniso8601==7.0.0
 appdirs==1.4.4
 asgiref==3.3.4
+bcrypt==4.0.1
 black==21.6b0
 certifi==2021.5.30
 click==8.0.1
