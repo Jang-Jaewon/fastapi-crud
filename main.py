@@ -3,11 +3,13 @@ from datetime import timedelta
 import bcrypt
 import graphene
 from fastapi import FastAPI
+from graphql import GraphQLError
+from jwt import PyJWTError
 from starlette.graphql import GraphQLApp
 
 import models
 from db_conf import db_session
-from jwt_token import create_access_token
+from jwt_token import create_access_token, decode_access_token
 from schemas import PostModel, PostSchema, UserSchema
 
 db = db_session.session_factory()
@@ -92,18 +94,35 @@ class CreateNewPost(graphene.Mutation):
     class Arguments:
         title = graphene.String(required=True)
         content = graphene.String(required=True)
+        token = graphene.String(required=True)
 
-    ok = graphene.Boolean()
+    result = graphene.String()
 
     @staticmethod
-    def mutate(root, info, title, content):
+    def mutate(root, info, title, content, token):
+
+        try:
+            payload = decode_access_token(data=token)
+            username = payload.get("user")
+
+            if username is None:
+                raise GraphQLError("Invalid credentials 1")
+
+        except PyJWTError:
+            raise GraphQLError("Invalid credentials 2")
+
+        user = db.query(models.User).filter(models.User.username == username).first()
+
+        if user is None:
+            raise GraphQLError("Invalid credentials 3")
+
         post = PostSchema(title=title, content=content)
         db_post = models.Post(title=post.title, content=post.content)
         db.add(db_post)
         db.commit()
         db.refresh(db_post)
-        ok = True
-        return CreateNewPost(ok=ok)
+        result = "Added new post"
+        return CreateNewPost(result=result)
 
 
 class PostMutations(graphene.ObjectType):
