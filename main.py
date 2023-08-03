@@ -2,12 +2,14 @@ from datetime import timedelta
 
 import bcrypt
 import graphene
-from fastapi import FastAPI
+from fastapi import Body, FastAPI
+from fastapi.responses import JSONResponse
 from graphql import GraphQLError
 from jwt import PyJWTError
 from starlette.graphql import GraphQLApp
 
 import models
+from celery_worker import create_task
 from db_conf import db_session
 from jwt_token import create_access_token, decode_access_token
 from schemas import PostModel, PostSchema, UserSchema
@@ -15,6 +17,15 @@ from schemas import PostModel, PostSchema, UserSchema
 db = db_session.session_factory()
 
 app = FastAPI()
+
+
+@app.post("/ex1")
+def run_task(data=Body(...)):
+    amount = int(data["amount"])
+    x = data["x"]
+    y = data["y"]
+    task = create_task.delay(amount, x, y)
+    return JSONResponse({"Result": task.get()})
 
 
 class Query(graphene.ObjectType):
