@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.users import router
+from api import users, courses
 
 app = FastAPI(
     title="Fast API CRUD",
@@ -14,4 +14,5 @@ app = FastAPI(
     },
 )
 
-app.include_router(router)
+app.include_router(users.router)
+app.include_router(courses.router)
