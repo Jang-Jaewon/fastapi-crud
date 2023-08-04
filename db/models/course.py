@@ -1,13 +1,12 @@
-from datetime import datetime
 import enum
 
-from sqlalchemy import Enum, Column, ForeignKey, Integer, String, Text, Boolean
+from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
-
-from db.db_setup import Base
 from user import User
 
+from db.db_setup import Base
+from db.models.mixins import Timestamp
 
 class ContentType(enum.Enum):
     lesson = 1
@@ -15,7 +14,7 @@ class ContentType(enum.Enum):
     assignment = 3
 
 
-class Course(Base):
+class Course(Timestamp, Base):
     __tablename__ = "courses"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -28,7 +27,7 @@ class Course(Base):
     student_courses = relationship("StudentCourse", back_populates="course")
 
 
-class Section(Base):
+class Section(Timestamp, Base):
     __tablename__ = "sections"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -40,7 +39,7 @@ class Section(Base):
     content_blocks = relationship("ContentBlock", back_populates="section")
 
 
-class ContentBlock(Base):
+class ContentBlock(Timestamp, Base):
     __tablename__ = "content_blocks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -52,10 +51,12 @@ class ContentBlock(Base):
     section_id = Column(Integer, ForeignKey("sections.id"), nullable=False)
 
     section = relationship("Section", back_populates="content_blocks")
-    completed_content_blocks = relationship("CompletedContentBlock", back_populates="content_block")
+    completed_content_blocks = relationship(
+        "CompletedContentBlock", back_populates="content_block"
+    )
 
 
-class StudentCourse(Base):
+class StudentCourse(Timestamp, Base):
     __tablename__ = "student_courses"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -67,10 +68,7 @@ class StudentCourse(Base):
     course = relationship("Course", back_populates="student_courses")
 
 
-class CompletedContentBlock(Base):
-    """
-    This shows when a student has completed a content block.
-    """
+class CompletedContentBlock(Timestamp, Base):
     __tablename__ = "completed_content_blocks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -81,4 +79,6 @@ class CompletedContentBlock(Base):
     grade = Column(Integer, default=0)
 
     student = relationship(User, back_populates="student_content_blocks")
-    content_block = relationship(ContentBlock, back_populates="completed_content_blocks")
+    content_block = relationship(
+        ContentBlock, back_populates="completed_content_blocks"
+    )
