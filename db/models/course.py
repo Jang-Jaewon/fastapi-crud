@@ -3,10 +3,11 @@ import enum
 from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
-from user import User
+from db.models.user import User
 
 from db.db_setup import Base
 from db.models.mixins import Timestamp
+
 
 class ContentType(enum.Enum):
     lesson = 1
