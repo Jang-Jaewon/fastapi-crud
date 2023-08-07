@@ -15,3 +15,8 @@ router = fastapi.APIRouter()
 async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = get_users(db, skip=skip, limit=limit)
     return users
+
+
+@router.post("/users")
+async def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
+    return create_user(db=db, user=user)
