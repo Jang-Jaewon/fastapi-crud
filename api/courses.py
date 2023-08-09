@@ -28,4 +28,3 @@ async def read_course(course_id: int, db: Session = Depends(get_db)):
     if db_course is None:
         raise HTTPException(status_code=404, detail="Course not found")
     return db_course
-
