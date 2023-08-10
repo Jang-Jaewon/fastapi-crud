@@ -2,11 +2,12 @@ from typing import List
 
 import fastapi
 from fastapi import Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from api.utils.courses import get_user_courses
 from api.utils.users import create_user, get_user, get_user_by_email, get_users
-from db.db_setup import get_db
+from db.db_setup import async_get_db, get_db
 from schemas.course import Course
 from schemas.user import User, UserCreate
 
@@ -28,8 +29,8 @@ async def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/users/{user_id}", response_model=User)
-async def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = get_user(db=db, user_id=user_id)
+async def read_user(user_id: int, db: AsyncSession = Depends(async_get_db)):
+    db_user = await get_user(db=db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
