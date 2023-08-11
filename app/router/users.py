@@ -5,11 +5,11 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from api.utils.courses import get_user_courses
-from api.utils.users import create_user, get_user, get_user_by_email, get_users
-from db.db_setup import async_get_db, get_db
-from schemas.course import Course
-from schemas.user import User, UserCreate
+from app.utils.courses import get_user_courses
+from app.utils.users import create_user, get_user, get_user_by_email, get_users
+from app.database.db_setup import async_get_db, get_db
+from app.schemas.course import Course
+from app.schemas.user import User, UserCreate
 
 router = fastapi.APIRouter()
 

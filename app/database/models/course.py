@@ -4,9 +4,9 @@ from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 
-from db.db_setup import Base
-from db.models.mixins import Timestamp
-from db.models.user import User
+from app.database.db_setup import Base
+from app.database.models.mixins import Timestamp
+from app.database.models.user import User
 
 
 class ContentType(enum.Enum):

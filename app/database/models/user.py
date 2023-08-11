@@ -3,8 +3,8 @@ import enum
 from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
-from db.db_setup import Base
-from db.models.mixins import Timestamp
+from app.database.db_setup import Base
+from app.database.models.mixins import Timestamp
 
 
 class Role(enum.IntEnum):

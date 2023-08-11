@@ -2,8 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
-from db.models.user import User
-from schemas.user import UserCreate
+from app.database.models.user import User
+from app.schemas.user import UserCreate
 
 
 async def get_user(db: AsyncSession, user_id: int):
