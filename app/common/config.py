@@ -1,6 +1,5 @@
-from dataclasses import dataclass, asdict
-from os import path, environ
-
+from dataclasses import asdict, dataclass
+from os import environ, path
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 

@@ -4,9 +4,9 @@ import fastapi
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.utils.courses import create_course, get_course, get_courses
 from app.database.db_setup import get_db
 from app.schemas.course import Course, CourseCreate
+from app.utils.courses import create_course, get_course, get_courses
 
 router = fastapi.APIRouter()
 

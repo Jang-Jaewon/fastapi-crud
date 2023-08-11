@@ -1,25 +1,28 @@
+import uvicorn
 from fastapi import FastAPI
 
-from app.router import sections, users, courses
-from app.database.db_setup import engine
-from app.database.models import course, user
+from app.common.config import conf
 
-user.Base.metadata.create_all(bind=engine)
-course.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(
-    title="Fast API CRUD",
-    description="FastAPI CRUD Study",
-    version="0.0.1",
-    contact={
-        "name": "Jaewon",
-        "email": "jewon119@google.com",
-    },
-    license_info={
-        "name": "MIT",
-    },
-)
+def create_app():
+    c = conf()
+    app = FastAPI(
+        title="Fast API CRUD",
+        description="FastAPI CRUD Study",
+        version="0.0.1",
+        contact={
+            "name": "Jaewon",
+            "email": "jewon119@google.com",
+        },
+        license_info={
+            "name": "MIT",
+        },
+    )
 
-app.include_router(users.router)
-app.include_router(courses.router)
-app.include_router(sections.router)
+    return app
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
