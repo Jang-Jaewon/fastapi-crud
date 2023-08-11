@@ -1,7 +1,10 @@
+from dataclasses import asdict
+
 import uvicorn
 from fastapi import FastAPI
 
 from app.common.config import conf
+from app.database.conn import db
 
 
 def create_app():
@@ -18,6 +21,8 @@ def create_app():
             "name": "MIT",
         },
     )
+    conf_dict = asdict(c)
+    db.init_app(app, **conf_dict)
 
     return app
 
