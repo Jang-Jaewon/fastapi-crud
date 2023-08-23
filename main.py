@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from enum import Enum
 from typing import Optional
+from pydantic import BaseModel
+
 
 app = FastAPI()
 
@@ -62,7 +64,10 @@ async def get_food(food_name: FoodEnum):
         return {"food_name": food_name, "message": "you are healthy"}
 
     if food_name.value == "fruits":
-        return {"food_name": food_name, "message": "you are still healthy, but like sweet things"}
+        return {
+            "food_name": food_name,
+            "message": "you are still healthy, but like sweet things",
+        }
 
     return {"food_name": food_name, "message": "i like chocolate milk"}
 
@@ -70,9 +75,9 @@ async def get_food(food_name: FoodEnum):
 fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 
 
-@app.get("/items")
-async def list_items(skip: int = 0, limit: int = 10):
-    return fake_items_db[skip: skip+limit]
+# @app.get("/items")
+# async def list_items(skip: int = 0, limit: int = 10):
+#     return fake_items_db[skip: skip+limit]
 
 
 # @app.get("/items/{item_id}")
@@ -86,20 +91,32 @@ async def list_items(skip: int = 0, limit: int = 10):
 
 
 @app.get("/users/{user_id}/items/{item_id}")
-async def get_user_item(user_id: int, item_id: str, q: str | None = None, short: bool = False):
+async def get_user_item(
+    user_id: int, item_id: str, q: str | None = None, short: bool = False
+):
     item = {"item_id": item_id, "owner_id": user_id}
     if q:
         item.update({"q": q})
     if not short:
-        item.update({"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."})
+        item.update(
+            {
+                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."
+            }
+        )
     return item
 
 
 @app.get("/items/{item_id}")
-async def get_item(item_id: str, sample_query_param: str, q: str | None = None, short: bool = False):
+async def get_item(
+    item_id: str, sample_query_param: str, q: str | None = None, short: bool = False
+):
     item = {"item_id": item_id, "sample_query_param": sample_query_param}
     if q:
         item.update({"q": q})
     if not short:
-        item.update({"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."})
+        item.update(
+            {
+                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."
+            }
+        )
     return item
