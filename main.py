@@ -1,8 +1,9 @@
-from fastapi import FastAPI
 from enum import Enum
 from typing import Optional
-from pydantic import BaseModel
 
+from fastapi import FastAPI
+
+from schema import Item
 
 app = FastAPI()
 
@@ -122,13 +123,6 @@ async def get_user_item(
 #     return item
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-
 @app.post("/items")
 async def create_item(item: Item):
     item_dict = item.model_dump()
@@ -144,4 +138,3 @@ async def create_item_with_put(item_id: int, item: Item, q: str | None = None):
     if q:
         result.update({"q": q})
     return result
-
