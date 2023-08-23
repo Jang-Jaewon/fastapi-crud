@@ -106,17 +106,42 @@ async def get_user_item(
     return item
 
 
-@app.get("/items/{item_id}")
-async def get_item(
-    item_id: str, sample_query_param: str, q: str | None = None, short: bool = False
-):
-    item = {"item_id": item_id, "sample_query_param": sample_query_param}
+# @app.get("/items/{item_id}")
+# async def get_item(
+#     item_id: str, sample_query_param: str, q: str | None = None, short: bool = False
+# ):
+#     item = {"item_id": item_id, "sample_query_param": sample_query_param}
+#     if q:
+#         item.update({"q": q})
+#     if not short:
+#         item.update(
+#             {
+#                 "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."
+#             }
+#         )
+#     return item
+
+
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+
+
+@app.post("/items")
+async def create_item(item: Item):
+    item_dict = item.model_dump()
+    if item.tax:
+        price_with_txt = item.price + item.tax
+        item_dict.update({"price_with_tax": price_with_txt})
+    return item_dict
+
+
+@app.post("/items{item_id}")
+async def create_item_with_put(item_id: int, item: Item, q: str | None = None):
+    result = {"item_id": item_id, **item.model_dump()}
     if q:
-        item.update({"q": q})
-    if not short:
-        item.update(
-            {
-                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla volutpat."
-            }
-        )
-    return item
+        result.update({"q": q})
+    return result
+
