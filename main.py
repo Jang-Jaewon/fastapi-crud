@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
 from schema import Item
 
@@ -135,6 +135,28 @@ async def create_item(item: Item):
 @app.post("/items{item_id}")
 async def create_item_with_put(item_id: int, item: Item, q: str | None = None):
     result = {"item_id": item_id, **item.model_dump()}
+    if q:
+        result.update({"q": q})
+    return result
+
+
+@app.get("/items")
+# async def read_items(q: str | None = Query(None, min_length=3, max_length=10)):  # Default=None
+# async def read_items(q: str | None = Query(..., min_length=3, max_length=10)):  # required & min/max
+# async def read_items(q: list[str] | None = Query(["foo", "bar"])):  # items?q=a&q=b&q=c&q=d
+async def read_items(
+    q: str
+    | None = Query(
+        None,
+        min_length=3,
+        max_length=10,
+        title="Sample title",
+        description="sample description",
+        alias="item-query"
+        # deprecated=True,
+    )
+):  # item?item-query="foo"
+    result = {"item_id": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         result.update({"q": q})
     return result
