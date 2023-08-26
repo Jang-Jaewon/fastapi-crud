@@ -164,10 +164,12 @@ async def read_items(
 
 @app.get("/items_validation/{item_id}")
 async def read_items_validation(
-    item_id: int = Path(..., title="The ID of the item to get"),
+    *,
+    item_id: int = Path(..., title="The ID of the item to get", ge=10, le=100),
     q: str | None = Query(None, alias="item-query"),
+    size: float = Query(..., gt=0, lt=7.75)
 ):
-    results = {"item_id": item_id}
+    results = {"item_id": item_id, "size": size}
     if q:
         results.update({"q": q})
     return results
