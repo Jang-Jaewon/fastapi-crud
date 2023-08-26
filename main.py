@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Path, Query
 
 from schema import Item
 
@@ -160,3 +160,14 @@ async def read_items(
     if q:
         result.update({"q": q})
     return result
+
+
+@app.get("/items_validation/{item_id}")
+async def read_items_validation(
+    item_id: int = Path(..., title="The ID of the item to get"),
+    q: str | None = Query(None, alias="item-query"),
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
