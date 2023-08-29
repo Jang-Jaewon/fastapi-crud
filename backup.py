@@ -189,3 +189,12 @@ async def update_item(
     if item:
         result.update({"item": item})
     return result
+
+
+@app.put("/items/{item_id}")
+async def update_item(
+    item_id: int,
+    item: Item = Body(..., embed=True),  # {item={}}
+):
+    result = {"item_id": item_id, "item": item}
+    return result
