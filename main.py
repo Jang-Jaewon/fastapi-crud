@@ -11,7 +11,7 @@ app = FastAPI()
 @app.put("/items/{item_id}")
 async def update_item(
     item_id: int,
-    item: Item = Body(..., embed=True),  # {item={}}
+    item: Item
 ):
     result = {"item_id": item_id, "item": item}
     return result
