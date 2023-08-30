@@ -1,10 +1,10 @@
 from typing import Optional, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class Image(BaseModel):
-    url: str = Field(..., pattern="^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$")
+    url: HttpUrl
     name: str
 
 
@@ -14,7 +14,14 @@ class Item(BaseModel):
     price: float = Field(..., gt=0, description="The price must be greater than zero.")
     tax: float | None = None
     tags: set[str] = set()
-    image: Image | None = None
+    image: list[Image] | None = None
+
+
+class Offer(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    items: list[Item]
 
 
 class User(BaseModel):
