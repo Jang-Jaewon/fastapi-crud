@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl
 
@@ -9,9 +9,11 @@ class Image(BaseModel):
 
 
 class Item(BaseModel):
-    name: str = Field(..., example="A very nic Item")
-    description: str | None = Field(None, title="The description of the item", max_length=100, example="16.25")
-    price: float = Field(..., gt=0, description="The price must be greater than zero.", example="1.67")
+    name: str
+    description: str | None = Field(
+        None, title="The description of the item", max_length=100
+    )
+    price: float = Field(..., gt=0, description="The price must be greater than zero.")
     tax: float | None = None
 
     # class Config:

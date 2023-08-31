@@ -167,7 +167,7 @@ async def read_items_validation(
     *,
     item_id: int = Path(..., title="The ID of the item to get", ge=10, le=100),
     q: str | None = Query(None, alias="item-query"),
-    size: float = Query(..., gt=0, lt=7.75)
+    size: float = Query(..., gt=0, lt=7.75),
 ):
     results = {"item_id": item_id, "size": size}
     if q:
@@ -201,10 +201,7 @@ async def update_item(
 
 
 @app.put("/items/{item_id}")
-async def update_item(
-    item_id: int,
-    item: Item
-):
+async def update_item(item_id: int, item: Item):
     result = {"item_id": item_id, "item": item}
     return result
 
