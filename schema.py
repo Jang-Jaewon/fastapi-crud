@@ -13,8 +13,16 @@ class Item(BaseModel):
     description: str | None = Field(None, title="The description of the item", max_length=100)
     price: float = Field(..., gt=0, description="The price must be greater than zero.")
     tax: float | None = None
-    tags: set[str] = set()
-    image: list[Image] | None = None
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Foo",
+                "description": "A very nic Item",
+                "price": "16.25",
+                "tax": "1.67",
+            }
+        }
 
 
 class Offer(BaseModel):
