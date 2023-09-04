@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, EmailStr
 
 
 class Image(BaseModel):
@@ -15,16 +15,7 @@ class Item(BaseModel):
     )
     price: float = Field(..., gt=0, description="The price must be greater than zero.")
     tax: float | None = None
-
-    # class Config:
-    #     json_schema_extra = {
-    #         "example": {
-    #             "name": "Foo",
-    #             "description": "A very nic Item",
-    #             "price": "16.25",
-    #             "tax": "1.67",
-    #         }
-    #     }
+    tag: list[str] = []
 
 
 class Offer(BaseModel):
@@ -41,3 +32,17 @@ class User(BaseModel):
 
 class Importance(BaseModel):
     importance: int
+
+
+class UserBase(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
+
+
+class UserIn(UserBase):
+    password: str
+
+
+class UserOut(UserBase):
+    pass
