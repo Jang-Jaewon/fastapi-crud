@@ -13,7 +13,7 @@ class Item(BaseModel):
     description: str | None = Field(
         None, title="The description of the item", max_length=100
     )
-    price: float = Field(..., gt=0, description="The price must be greater than zero.")
+    price: float = 10.5
     tax: float | None = None
     tag: list[str] = []
 
