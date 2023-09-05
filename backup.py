@@ -295,3 +295,29 @@ async def read_items(
         "User_Agent": user_agent,
         "X_Token": x_token,
     }
+
+
+@app.post("/items", response_model=Item)
+async def create_item(item: Item):
+    return item
+
+
+@app.post("/items{item_id}", response_model=Item, response_model_exclude_unset=True)
+async def read_item(item_id: Literal["Foo", "Bar", "Baz"]):
+    return items[item_id]
+
+
+@app.get(
+    "/items{item_id}/name",
+    response_model=Item,
+    response_model_include={"name", "description"},
+)
+async def read_item_name(item_id: Literal["Foo", "Bar", "Baz"]):
+    return items[item_id]
+
+
+@app.post(
+    "/items/{item_id}/public", response_model=Item, response_model_exclude={"tax"}
+)
+async def read_items_public_data(item_id: Literal["Foo", "Bar", "Baz"]):
+    return items[item_id]

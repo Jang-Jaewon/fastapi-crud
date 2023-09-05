@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, HttpUrl, EmailStr
+from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
 
 class Image(BaseModel):
@@ -46,3 +46,7 @@ class UserIn(UserBase):
 
 class UserOut(UserBase):
     pass
+
+
+class UserInDB(UserBase):
+    hashed_password: str
