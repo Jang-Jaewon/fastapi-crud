@@ -33,7 +33,11 @@ async def read_item(item_id: Literal["Foo", "Bar", "Baz"]):
     return items[item_id]
 
 
-@app.post("/user", response_model=UserOut)
-async def create_user(user: UserIn):
-    return user
+@app.get("/items{item_id}/name", response_model=Item, response_model_include={"name", "description"})
+async def read_item_name(item_id: Literal["Foo", "Bar", "Baz"]):
+    return items[item_id]
 
+
+@app.post("/items/{item_id}/public", response_model=Item, response_model_exclude={"tax"})
+async def read_items_public_data(item_id: Literal["Foo", "Bar", "Baz"]):
+    return items[item_id]
