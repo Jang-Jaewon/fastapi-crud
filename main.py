@@ -1,20 +1,23 @@
 from datetime import datetime, time, timedelta
 from enum import Enum
-from typing import Annotated, List, Literal, Optional
+from typing import Annotated, List, Literal, Optional, Union
 from uuid import UUID
 
 from fastapi import Body, Cookie, FastAPI, Header, Path, Query
 
-from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn,
+from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, PlaneItem, CarItem,
                     UserInDB, UserOut)
 
 app = FastAPI()
 
 
 items = {
-    "Foo": {"name": "Foo", "price": 50.2},
-    "Bar": {"name": "Bar", "description": "The bartenders", "price": 62, "tax": 20.2},
-    "Baz": {"name": "Baz", "description": None, "price": 50.2, "tax": 10.5, "tags": []},
+    "item1": {"description": "this is description hello", "type": "car"},
+    "item2": {
+        "description": "Music is my dog, it my icecream",
+        "type": "plane",
+        "size": 5
+    },
 }
 
 
@@ -33,3 +36,8 @@ def fake_save_user(user_in: UserIn):
 async def create_user(user_in: UserIn):
     user_saved = fake_save_user(user_in)
     return user_saved
+
+
+@app.get("/items/{item_id}", response_model=Union[PlaneItem, CarItem])
+async def read_item(item_id: Literal["item1", "item2"]):
+    return items[item_id]
