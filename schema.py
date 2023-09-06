@@ -64,3 +64,8 @@ class CarItem(BaseItem):
 class PlaneItem(BaseItem):
     type: str = "plane"
     size: int
+
+
+class ListItem(BaseModel):
+    name: str
+    description: str

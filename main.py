@@ -6,7 +6,7 @@ from uuid import UUID
 from fastapi import Body, Cookie, FastAPI, Header, Path, Query
 
 from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, PlaneItem, CarItem,
-                    UserInDB, UserOut)
+                    UserInDB, UserOut, ListItem)
 
 app = FastAPI()
 
@@ -41,3 +41,19 @@ async def create_user(user_in: UserIn):
 @app.get("/items/{item_id}", response_model=Union[PlaneItem, CarItem])
 async def read_item(item_id: Literal["item1", "item2"]):
     return items[item_id]
+
+
+list_items = [
+    {"name": "Foo", "description": "There comes my hero"},
+    {"name": "Red", "description": "It's my aeroplane"}
+]
+
+
+@app.get("/list_items/", response_model=list[ListItem])
+async def read_items():
+    return items
+
+
+@app.get("/arbitrary", response_model=dict[str, float])
+async def get_arbitrary():
+    return {"foo":1, "bar": 2}
