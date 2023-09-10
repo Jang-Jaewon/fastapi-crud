@@ -387,3 +387,17 @@ async def delete_item(pk: str):
 @app.get("/items", status_code=status.HTTP_302_FOUND)
 async def read_items_redirect():
     return {"hello": "world"}
+
+
+@app.post("/login-form")
+async def login_form(username: str = Form(...), password: str = Form(...)):
+    print("password", password)
+    return {"username": username}
+
+
+@app.post("/login-json")
+async def login_json(username: str = Body(...), password: str = Body(...)):
+    print("password", password)
+    return {"username": username}
+# async def login_json(user: User):
+#     return user
