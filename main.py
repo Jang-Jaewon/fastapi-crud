@@ -11,13 +11,11 @@ from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, Plan
 app = FastAPI()
 
 
-@app.post("file")
-async def create_file(file: bytes | None = File(None, description="A file read as bytes")):
-    return {"file": len(file)}
+@app.post("/file")
+async def create_file(files: list[bytes] = File(..., description="A file read as bytes")):
+    return {"file_sizes": [len(file) for file in files]}
 
 
 @app.post("/uploadfile")
-async def create_upload_file(file: UploadFile = File(..., description="A file read as UploadFile")):
-    if not file:
-        return {"message": "No upload file send"}
-    return {"filename": file.filename}
+async def create_upload_file(files: list[UploadFile] = File(..., description="A file read as UploadFile")):
+    return {"filename":[file.filename for file in files]}
