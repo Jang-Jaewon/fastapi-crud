@@ -371,3 +371,19 @@ async def read_items():
 @app.get("/arbitrary", response_model=dict[str, float])
 async def get_arbitrary():
     return {"foo":1, "bar": 2}
+
+
+@app.post("/items", status_code=status.HTTP_201_CREATED)
+async def crate_item(name: str):
+    return {"name": name}
+
+
+@app.delete("/items/{[pk}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_item(pk: str):
+    print("pk", pk)
+    return
+
+
+@app.get("/items", status_code=status.HTTP_302_FOUND)
+async def read_items_redirect():
+    return {"hello": "world"}

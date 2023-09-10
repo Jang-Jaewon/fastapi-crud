@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, List, Literal, Optional, Union
 from uuid import UUID
 
-from fastapi import Body, Cookie, FastAPI, Header, Path, Query, status
+from fastapi import Body, Cookie, FastAPI, Header, Path, Query, status, Form
 
 from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, PlaneItem, CarItem,
                     UserInDB, UserOut, ListItem)
@@ -11,17 +11,15 @@ from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, Plan
 app = FastAPI()
 
 
-@app.post("/items", status_code=status.HTTP_201_CREATED)
-async def crate_item(name: str):
-    return {"name": name}
+@app.post("/login-form")
+async def login_form(username: str = Form(...), password: str = Form(...)):
+    print("password", password)
+    return {"username": username}
 
 
-@app.delete("/items/{[pk}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_item(pk: str):
-    print("pk", pk)
-    return
-
-
-@app.get("/items", status_code=status.HTTP_302_FOUND)
-async def read_items_redirect():
-    return {"hello": "world"}
+@app.post("/login-json")
+async def login_json(username: str = Body(...), password: str = Body(...)):
+    print("password", password)
+    return {"username": username}
+# async def login_json(user: User):
+#     return user

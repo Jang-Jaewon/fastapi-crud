@@ -27,7 +27,7 @@ class Offer(BaseModel):
 
 class User(BaseModel):
     username: str
-    full_name: str | None = None
+    password: str
 
 
 class Importance(BaseModel):
