@@ -5,9 +5,11 @@ from uuid import UUID
 
 from fastapi import (Body, Cookie, FastAPI, File, Form, Header, HTTPException,
                      Path, Query, Request, UploadFile, status)
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
                     PlaneItem, User, UserBase, UserIn, UserInDB, UserOut)
 
@@ -48,18 +50,31 @@ async def read_unicorns(name: str):
     return {"unicorn_name": name}
 
 
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request, exc):
+#     return PlainTextResponse(str(exc), status_code=400)
+#
+#
+# @app.exception_handler(StarletteHTTPException)
+# async def http_exception_handler(request, exc):
+#     return PlainTextResponse(str(exc.detail), status_code=exc.status_code)
+#
+#
+# @app.get("/validation_items/{item_id}")
+# async def read_validation_items(item_id: int):
+#     if item_id == 3:
+#         raise HTTPException(status_code=418, detail="Nope! I don't lik 3.")
+#     return {"item_id": item_id}
+
+
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
-    return PlainTextResponse(str(exc), status_code=400)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+    )
 
 
-@app.exception_handler(StarletteHTTPException)
-async def http_exception_handler(request, exc):
-    return PlainTextResponse(str(exc.detail), status_code=exc.status_code)
-
-
-@app.get("/validation_items/{item_id}")
-async def read_validation_items(item_id: int):
-    if item_id == 3:
-        raise HTTPException(status_code=418, detail="Nope! I don't lik 3.")
-    return {"item_id": item_id}
+@app.post("/items")
+async def create_item(item: Item):
+    return item

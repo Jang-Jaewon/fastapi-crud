@@ -8,14 +8,18 @@ class Image(BaseModel):
     name: str
 
 
+# class Item(BaseModel):
+#     name: str
+#     description: str | None = Field(
+#         None, title="The description of the item", max_length=100
+#     )
+#     price: float = 10.5
+#     tax: float | None = None
+#     tag: list[str] = []
+
 class Item(BaseModel):
-    name: str
-    description: str | None = Field(
-        None, title="The description of the item", max_length=100
-    )
-    price: float = 10.5
-    tax: float | None = None
-    tag: list[str] = []
+    title: str
+    size: int
 
 
 class Offer(BaseModel):
