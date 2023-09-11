@@ -323,14 +323,12 @@ async def read_items_public_data(item_id: Literal["Foo", "Bar", "Baz"]):
     return items[item_id]
 
 
-
-
 items = {
     "item1": {"description": "this is description hello", "type": "car"},
     "item2": {
         "description": "Music is my dog, it my icecream",
         "type": "plane",
-        "size": 5
+        "size": 5,
     },
 }
 
@@ -359,7 +357,7 @@ async def read_item(item_id: Literal["item1", "item2"]):
 
 list_items = [
     {"name": "Foo", "description": "There comes my hero"},
-    {"name": "Red", "description": "It's my aeroplane"}
+    {"name": "Red", "description": "It's my aeroplane"},
 ]
 
 
@@ -370,7 +368,7 @@ async def read_items():
 
 @app.get("/arbitrary", response_model=dict[str, float])
 async def get_arbitrary():
-    return {"foo":1, "bar": 2}
+    return {"foo": 1, "bar": 2}
 
 
 @app.post("/items", status_code=status.HTTP_201_CREATED)
@@ -399,5 +397,21 @@ async def login_form(username: str = Form(...), password: str = Form(...)):
 async def login_json(username: str = Body(...), password: str = Body(...)):
     print("password", password)
     return {"username": username}
+
+
 # async def login_json(user: User):
 #     return user
+
+
+@app.post("/file")
+async def create_file(
+    files: list[bytes] = File(..., description="A file read as bytes")
+):
+    return {"file_sizes": [len(file) for file in files]}
+
+
+@app.post("/uploadfile")
+async def create_upload_file(
+    files: list[UploadFile] = File(..., description="A file read as UploadFile")
+):
+    return {"filename": [file.filename for file in files]}

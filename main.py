@@ -3,19 +3,24 @@ from enum import Enum
 from typing import Annotated, List, Literal, Optional, Union
 from uuid import UUID
 
-from fastapi import Body, Cookie, FastAPI, Header, Path, Query, status, Form, File, UploadFile
+from fastapi import (Body, Cookie, FastAPI, File, Form, Header, HTTPException,
+                     Path, Query, UploadFile, status)
 
-from schema import (Image, Importance, Item, Offer, User, UserBase, UserIn, PlaneItem, CarItem,
-                    UserInDB, UserOut, ListItem)
+from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
+                    PlaneItem, User, UserBase, UserIn, UserInDB, UserOut)
 
 app = FastAPI()
 
 
-@app.post("/file")
-async def create_file(files: list[bytes] = File(..., description="A file read as bytes")):
-    return {"file_sizes": [len(file) for file in files]}
+items = {"foo": "The Foo Wrestlers"}
 
 
-@app.post("/uploadfile")
-async def create_upload_file(files: list[UploadFile] = File(..., description="A file read as UploadFile")):
-    return {"filename":[file.filename for file in files]}
+@app.get("/items/{item_id}")
+async def read_item(item_id: str):
+    if item_id not in items:
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found",
+            headers={"X-Error": "Ther goes my error"},
+        )
+    return {"item": items[item_id]}
