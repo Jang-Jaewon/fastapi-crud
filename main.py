@@ -9,6 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.exception_handlers import http_exception_handler, request_validation_exception_handler
 
 from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
                     PlaneItem, User, UserBase, UserIn, UserInDB, UserOut)
@@ -67,14 +68,33 @@ async def read_unicorns(name: str):
 #     return {"item_id": item_id}
 
 
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exc: RequestValidationError):
+#     return JSONResponse(
+#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+#     )
+#
+#
+# @app.post("/items")
+# async def create_item(item: Item):
+#     return item
+
+
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    print(f"OMG! HTTP error!: {repr(exc)}")
+    return await http_exception_handler(request, exc)
+
+
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
-    )
+async def validation_exception_handler(request, exc):
+    print(f"OMG! The client sent invalid data!: {exc}")
+    return await request_validation_exception_handler(request, exc)
 
 
-@app.post("/items")
-async def create_item(item: Item):
-    return item
+@app.get("/blah_items/{item_id}")
+async def read_items(item_id: int):
+    if item_id == 3:
+        raise HTTPException(status_code=418, detail="Nope! I dont't like 3.")
+    return {"item_id": item_id}
