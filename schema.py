@@ -8,18 +8,12 @@ class Image(BaseModel):
     name: str
 
 
-# class Item(BaseModel):
-#     name: str
-#     description: str | None = Field(
-#         None, title="The description of the item", max_length=100
-#     )
-#     price: float = 10.5
-#     tax: float | None = None
-#     tag: list[str] = []
-
 class Item(BaseModel):
-    title: str
-    size: int
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
+    tag: set[str] = set()
 
 
 class Offer(BaseModel):
