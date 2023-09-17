@@ -29,7 +29,7 @@ class Tags(Enum):
     status_code=status.HTTP_201_CREATED,
     tags=[Tags.items],
     summary="Create an Item",
-    # description="Create an item with all the information: name; description; price; tax; and a set of",
+    response_description="The created item"
 )
 async def create_item(item: Item):
     """
@@ -52,3 +52,8 @@ async def read_items():
 @app.get("/users", tags=[Tags.users])
 async def read_users():
     return [{"username": "PhoebeBuffay"}]
+
+
+@app.get("/elements", tags=[Tags.items], deprecated=True)
+async def read_elements():
+    return [{"item_id": "Foo"}]
