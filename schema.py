@@ -1,5 +1,5 @@
 from typing import List, Optional
-
+from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
 
@@ -9,11 +9,11 @@ class Image(BaseModel):
 
 
 class Item(BaseModel):
-    name: str
+    name: str | None = None
     description: str | None = None
-    price: float
-    tax: float | None = None
-    tag: set[str] = set()
+    price: float | None = None
+    tax: float = 10.5
+    tags: list[str] = []
 
 
 class Offer(BaseModel):
