@@ -511,18 +511,18 @@ class Tags(Enum):
     status_code=status.HTTP_201_CREATED,
     tags=[Tags.items],
     summary="Create an Item",
-    response_description="The created item"
+    response_description="The created item",
 )
 async def create_item(item: Item):
     """
-        Create an item with all the information:
+    Create an item with all the information:
 
-        - **name**: each item must have a name
-        - **description**: a long description
-        - **price**: required
-        - **tax**: if the item doesn't have tax, you can omit this
-        - **tags**: a set of unique tag strings for this item
-        """
+    - **name**: each item must have a name
+    - **description**: a long description
+    - **price**: required
+    - **tax**: if the item doesn't have tax, you can omit this
+    - **tags**: a set of unique tag strings for this item
+    """
     return item
 
 
@@ -539,7 +539,6 @@ async def read_users():
 @app.get("/elements", tags=[Tags.items], deprecated=True)
 async def read_elements():
     return [{"item_id": "Foo"}]
-
 
 
 items = {
