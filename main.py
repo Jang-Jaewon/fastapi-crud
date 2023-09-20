@@ -18,39 +18,17 @@ from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
 app = FastAPI()
 
 
-# async def hello():
-#     return "world"
-#
-#
-# async def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100, blah: str = Depends(hello)):
-#     return {"q": q, "skip": skip, "limit": limit, "hello": blah}
-#
-# @app.get("/items")
-# async def read_items(commons: dict = Depends(common_parameters)):
-#     return commons
-#
-#
-# @app.get("/users")
-# async def read_users(commons: dict = Depends(common_parameters)):
-#     return commons
+# Sub-Dependencies
+def query_extractor(q: str | None = None):
+    return q
 
 
-fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+def query_or_body_extractor(q: str = Depends(query_extractor), last_query: str | None = Body(None)):
+    if q:
+        return q
+    return last_query
 
 
-class CommonQueryParams:
-    def __init__(self, q: str | None = None, skip: int = 0, limit: int = 100):
-        self.q = q
-        self.skip = skip
-        self.limit = limit
-
-
-@app.get("/items")
-async def read_items(commons: CommonQueryParams = Depends()):
-    response = {}
-    if commons.q:
-        response.update({"q": commons.q})
-
-    items = fake_items_db[commons.skip : commons.skip + commons.limit]
-    response.update({"items": items})
-    return response
+@app.post("/item")
+async def try_query(query_or_body: str = Depends(query_or_body_extractor)):
+    return {"q_or_body": query_or_body}
