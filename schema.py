@@ -35,8 +35,9 @@ class Importance(BaseModel):
 
 class UserBase(BaseModel):
     username: str
-    email: EmailStr
+    email: str | None = None
     full_name: str | None = None
+    disable: bool | None = None
 
 
 class UserIn(UserBase):

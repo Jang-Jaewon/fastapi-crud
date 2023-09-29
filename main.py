@@ -14,27 +14,33 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
                     PlaneItem, User, UserBase, UserIn, UserInDB, UserOut)
+from fastapi.security import OAuth2PasswordBearer
 
 
-async def verify_token(x_token: str = Header(...)):
-    if x_token != "fake-super-secret-token":
-        raise HTTPException(status_code=400, detail="X-Token header invalid")
+app = FastAPI()
 
 
-async def verify_key(x_key: str = Header(...)):
-    if x_key != "fake-super-secret-key":
-        raise HTTPException(status_code=400, detail="X-Key header invalid")
-    return x_key
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="token")
 
 
-app = FastAPI(dependencies=[Depends(verify_token), Depends(verify_key)])
+def fake_decode_token(token):
+    return User(
+        username=f"{token} fake decode",
+        email="foo@example.com",
+        full_name="Foo bar"
+    )
+
+
+async def get_current_user(token: str = Depends(oauth2_schema)):
+    user = fake_decode_token(token)
+    return user
+
+
+@app.get("/user/me")
+async def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
 
 
 @app.get("/items")
-async def read_items():
-    return [{"item": "Foo"}, {"item": "Bar"}]
-
-
-@app.get("/users")
-async def read_users():
-    return [{"username": "Rick"}, {"username": "Morty"}]
+async def read_items(token: str = Depends(oauth2_schema)):
+    return {"token": token}
