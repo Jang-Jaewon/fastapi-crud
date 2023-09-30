@@ -20,27 +20,3 @@ from fastapi.security import OAuth2PasswordBearer
 app = FastAPI()
 
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def fake_decode_token(token):
-    return User(
-        username=f"{token} fake decode",
-        email="foo@example.com",
-        full_name="Foo bar"
-    )
-
-
-async def get_current_user(token: str = Depends(oauth2_schema)):
-    user = fake_decode_token(token)
-    return user
-
-
-@app.get("/user/me")
-async def get_me(current_user: User = Depends(get_current_user)):
-    return current_user
-
-
-@app.get("/items")
-async def read_items(token: str = Depends(oauth2_schema)):
-    return {"token": token}
