@@ -10,7 +10,7 @@ from fastapi.exception_handlers import (http_exception_handler,
                                         request_validation_exception_handler)
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
@@ -23,18 +23,18 @@ oauth2_schema = OAuth2PasswordBearer(tokenUrl="token")
 
 
 fake_users_db = {
-    "j": dict(
-        username="Jaewon",
+    "jaewon": dict(
+        username="jaewon",
         full_name="Jaewon Jang",
         email="jaewon@example.com",
-        hashed_password="hashedfakesecret1",
+        hashed_password="fakehashedsecret",
         disable=False,
     ),
-    "h": dict(
-        username="Haezin",
+    "haezin": dict(
+        username="haezin",
         full_name="Haezin Na",
         email="haezin@example.com",
-        hashed_password="hashedfakesecret2",
+        hashed_password="fakehashedsecret",
         disable=True,
     ),
 }
@@ -71,6 +71,19 @@ async def get_current_activate_user(current_user: User = Depends(get_current_use
             status_code=400, detail="Inactive user", headers={"WWW-Authent"}
         )
     return current_user
+
+
+@app.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user_dict = fake_users_db.get(form_data.username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    user = UserInDB(**user_dict)
+    hashed_password = fake_hash_passwrod(form_data.password)
+    if not hashed_password == user.hashed_password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    return {"access_token": user.username, "token_type": "bearer"}
 
 
 @app.get("/user/me")
