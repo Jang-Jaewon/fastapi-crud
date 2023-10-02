@@ -573,13 +573,15 @@ def patch_item(item_id: str, item: Item):
     return updated_item
 
 
-
 async def hello():
     return "world"
 
 
-async def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100, blah: str = Depends(hello)):
+async def common_parameters(
+    q: str | None = None, skip: int = 0, limit: int = 100, blah: str = Depends(hello)
+):
     return {"q": q, "skip": skip, "limit": limit, "hello": blah}
+
 
 @app.get("/items")
 async def read_items(commons: dict = Depends(common_parameters)):
@@ -617,7 +619,9 @@ def query_extractor(q: str | None = None):
     return q
 
 
-def query_or_body_extractor(q: str = Depends(query_extractor), last_query: str | None = Body(None)):
+def query_or_body_extractor(
+    q: str = Depends(query_extractor), last_query: str | None = Body(None)
+):
     if q:
         return q
     return last_query
