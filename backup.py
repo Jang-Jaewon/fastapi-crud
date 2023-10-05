@@ -733,7 +733,6 @@ async def read_items(token: str = Depends(oauth2_schema)):
     return {"token": token}
 
 
-
 SECRET_KEY = "testsecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30

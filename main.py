@@ -15,11 +15,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from schema import (CarItem, Image, Importance, Item, ListItem, Offer,
                     PlaneItem, Token, TokenData, User, UserBase, UserIn,
                     UserInDB, UserOut)
-from starlette.middleware.base import BaseHTTPMiddleware
 
 app = FastAPI()
 
@@ -34,6 +34,7 @@ class MyMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(MyMiddleware)
+
 
 @app.get("/blah")
 async def blah():
