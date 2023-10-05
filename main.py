@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Annotated, List, Literal, Optional, Union
 from uuid import UUID
 
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import (Body, Cookie, Depends, FastAPI, File, Form, Header,
                      HTTPException, Path, Query, Request, UploadFile, status)
 from fastapi.encoders import jsonable_encoder
@@ -33,7 +34,12 @@ class MyMiddleware(BaseHTTPMiddleware):
         return response
 
 
+origins = ["http://localhost:8000", "http://localhost:3000"]
+app.add_middleware(CORSMiddleware, allow_origins=origins)
 app.add_middleware(MyMiddleware)
+
+
+
 
 
 @app.get("/blah")
