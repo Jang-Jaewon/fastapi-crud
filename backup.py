@@ -847,3 +847,23 @@ async def get_me(current_user: User = Depends(get_current_active_user)):
 @app.get("/users/items")
 async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
+
+
+
+class MyMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        start_time = time.time()
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        response.headers["X-Process-Time"] = str(process_time)
+        return response
+
+
+origins = ["http://localhost:8000", "http://localhost:3000"]
+app.add_middleware(CORSMiddleware, allow_origins=origins)
+app.add_middleware(MyMiddleware)
+
+
+@app.get("/blah")
+async def blah():
+    return {"hello": "world"}
