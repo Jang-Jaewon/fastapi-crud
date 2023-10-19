@@ -65,7 +65,7 @@ def write_notification(email: str, message=""):
         email_file.write(content)
 
 
-@app.post("/end-notification/{email}")
+@app.post("/end-notification/{email}", status_code=202)
 async def send_notification(email: str, background_tasks: BackgroundTasks):
     background_tasks.add_task(write_notification, email, message="some notification")
     return {"message": "Notification sent in the background"}
