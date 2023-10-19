@@ -1,1 +1,2 @@
-notification for test2@example.com: some notification
+found query qasd12123
+message to test@example.com
