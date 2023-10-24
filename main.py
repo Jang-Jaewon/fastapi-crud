@@ -15,6 +15,18 @@ You will be able to:
 * **Read users** (_not implemented_).
 """
 
+tags_metadata = [
+    dict(name="users", description="Operations with users. the **login** logic is also here."),
+    dict(
+        name="items",
+        description="Manage items. so _fancy_ they have their own docs",
+        externalDocs=dict(
+            description="Items external docs",
+            url="https://www.jvp.design"
+        ),
+    )
+]
+
 
 app = FastAPI(
     title="TestApp",
@@ -30,6 +42,8 @@ app = FastAPI(
         name="Apache 2.0",
         url="https://www.apache.org/licenses/LICENSE-2.0.html"
     ),
+    openapi_tags=tags_metadata,
+    openapi_url="/api/v1/openapi.json"
 )
 
 
