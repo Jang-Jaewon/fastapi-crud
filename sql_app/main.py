@@ -58,7 +58,6 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 # BackgroundTasks
 import time
 
-
 # def write_notification(email: str, message=""):
 #     with open("log.txt", mode="w") as email_file:
 #         content = f"notification for {email}: {message}"
