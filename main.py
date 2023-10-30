@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 description = """
 App API helps you do awesome stuff.
@@ -55,3 +56,5 @@ async def get_users():
 async def read_items():
     return [dict(name="wand"), dict(name="flying broom")]
 
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
